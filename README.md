@@ -74,7 +74,6 @@ Determines knitting patterns based on a knitted product.
    => Detail view
 
 ## Wireframes
-[Add picture of your hand sketched wireframes in this section]
 <img src="IMG_7802.jpg" width=600>
 
 ### [BONUS] Digital Wireframes & Mockups

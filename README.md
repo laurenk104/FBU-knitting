@@ -83,8 +83,29 @@ Determines knitting patterns based on a knitted product.
 ## Schema 
 [This section will be completed in Unit 9]
 ### Models
-[Add table of models]
+#### Pattern
+
+   | Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | objectId      | String   | unique id for the user post (default field) |
+   | user          | Pointer to User| current user |
+   | image         | File     | image of swatch |
+   | pattern       | Array    | 2D boolean array of pattern |
+   | name          | String   | name the user gives to the pattern |
+   | createdAt     | DateTime | date when post is created (default field) |
+   | updatedAt     | DateTime | date when post is last updated (default field) |
+   
 ### Networking
-- [Add list of network requests by screen ]
+#### List of network requests by screen
+   - Home Feed Screen
+      - (Read/GET) Query all patterns made by the current user
+   - Create Pattern Screen
+      - (Create/POST) Create a new Pattern object
+   - Detail Screen
+      - (Read/GET) Query for specific pattern info
+      - (delete) Delete current pattern
+   - Edit Screen
+      - (Update/PUT) Update pattern array
+      - (delete) Delete current pattern
 - [Create basic snippets for each Parse network request]
 - [OPTIONAL: List endpoints if using existing API such as Yelp]

@@ -81,14 +81,13 @@ Determines knitting patterns based on a knitted product.
 ### [BONUS] Interactive Prototype
 
 ## Schema 
-[This section will be completed in Unit 9]
 ### Models
 #### Pattern
 
    | Property      | Type     | Description |
    | ------------- | -------- | ------------|
    | objectId      | String   | unique id for the user post (default field) |
-   | user          | Pointer to User| current user |
+   | user          | Pointer to User| user who composed the pattern |
    | image         | File     | image of swatch |
    | pattern       | Array    | 2D boolean array of pattern |
    | name          | String   | name the user gives to the pattern |
@@ -99,6 +98,20 @@ Determines knitting patterns based on a knitted product.
 #### List of network requests by screen
    - Home Feed Screen
       - (Read/GET) Query all patterns made by the current user
+      ``` 
+      // (Read/GET) Query all patterns made by user
+      let query = PFQuery(className:"Pattern")
+      query.whereKey("user", equalTo: currentUser)
+      query.order(byDescending: "createdAt")
+      query.findObjectsInBackground { (patterns: [PFObject]?, error: Error?) in
+         if let error = error {
+            print(error.localizedDescription)
+         } else if let patterns = patterns {
+            print("Successfully retrieved \(patterns.count) patterns.")
+            // TODO: Do something with posts...
+         }
+      }
+      ```
    - Create Pattern Screen
       - (Create/POST) Create a new Pattern object
    - Detail Screen

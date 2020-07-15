@@ -5,6 +5,8 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import java.util.List;
+
 @ParseClassName("Pattern")
 public class Pattern extends ParseObject {
 
@@ -30,7 +32,13 @@ public class Pattern extends ParseObject {
         put(KEY_IMAGE, image);
     }
 
-    // pattern stuff
+    public List<Boolean> getPattern() {
+        return getList(KEY_PATTERN);
+    }
+
+    public void setPattern(List<Boolean> pattern) {
+        put(KEY_PATTERN, pattern);
+    }
 
     public ParseUser getUser() {
         return getParseUser(KEY_USER);

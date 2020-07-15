@@ -1,11 +1,13 @@
 package com.example.knitting;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -53,17 +55,25 @@ public class PatternsAdapter extends RecyclerView.Adapter<PatternsAdapter.ViewHo
 
         private ImageView ivImage;
         private TextView tvName;
+        private RelativeLayout rlPattern;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ivImage = itemView.findViewById(R.id.ivImage);
             tvName = itemView.findViewById(R.id.tvName);
+            rlPattern = itemView.findViewById(R.id.rlPattern);
         }
 
         public void bind(Pattern pattern) {
             tvName.setText(pattern.getName());
-            Log.d("image", "" + pattern);
             Glide.with(context).load(pattern.getImage().getUrl()).into(ivImage);
+            rlPattern.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, DetailActivity.class);
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 }

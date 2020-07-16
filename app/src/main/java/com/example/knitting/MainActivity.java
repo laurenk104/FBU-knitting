@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
             finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

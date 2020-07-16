@@ -3,6 +3,7 @@ package com.example.knitting;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,11 +13,13 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.bumptech.glide.Glide;
+import com.parse.ParseUser;
 
 import org.parceler.Parcels;
 
@@ -30,9 +33,11 @@ public class DetailActivity extends AppCompatActivity {
 
     ImageView ivDetailImage;
     ListView gridColumns;
+    GridView gridPattern;
 
     Pattern pattern;
-    List<List<Boolean>> values;
+    boolean[][] values;
+    Drawable drawable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,19 +48,29 @@ public class DetailActivity extends AppCompatActivity {
         values = pattern.getPattern();
 
         ivDetailImage = findViewById(R.id.ivDetailImage);
-        gridColumns = findViewById(R.id.gridColumns);
+        gridPattern = findViewById(R.id.gridPattern);
         PatternGridAdapter adapter = new PatternGridAdapter(this, values);
-        gridColumns.setAdapter(adapter);
+        gridPattern.setAdapter(adapter);
+        gridPattern.setNumColumns(values[0].length);
 
-        Glide.with(this).load(pattern.getImage().getUrl()).into(ivDetailImage);
+     //   Glide.with(this).load(pattern.getImage().getUrl()).into(ivDetailImage);
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-//        try {
-//            getSupportActionBar().setLogo(drawableFromUrl(pattern.getImage().getUrl()));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-      //  getSupportActionBar().setLogo(Integer.parseInt(pattern.getImage().getUrl()));
+
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    drawable = drawableFromUrl(pattern.getImage().getUrl());
+//                    Log.d("test", "" + drawable);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//        thread.start();
+
+        getSupportActionBar().setLogo(drawable);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setTitle(pattern.getName());
     }
@@ -69,5 +84,36 @@ public class DetailActivity extends AppCompatActivity {
 
         x = BitmapFactory.decodeStream(input);
         return new BitmapDrawable(Resources.getSystem(), x);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.home) {
+            // Navigate to the home activity
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        if (item.getItemId() == R.id.compose) {
+            // Navigate to the compose activity
+            Intent intent = new Intent(this, ComposeActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        if (item.getItemId() == R.id.logout) {
+            ParseUser.logOut();
+            Intent i = new Intent(this, LoginActivity.class);
+            startActivity(i);
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

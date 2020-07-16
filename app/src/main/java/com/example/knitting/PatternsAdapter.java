@@ -2,6 +2,7 @@ package com.example.knitting;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Movie;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -64,13 +67,14 @@ public class PatternsAdapter extends RecyclerView.Adapter<PatternsAdapter.ViewHo
             rlPattern = itemView.findViewById(R.id.rlPattern);
         }
 
-        public void bind(Pattern pattern) {
+        public void bind(final Pattern pattern) {
             tvName.setText(pattern.getName());
             Glide.with(context).load(pattern.getImage().getUrl()).into(ivImage);
             rlPattern.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(context, DetailActivity.class);
+                    intent.putExtra(Pattern.class.getSimpleName(), Parcels.wrap(pattern));
                     context.startActivity(intent);
                 }
             });

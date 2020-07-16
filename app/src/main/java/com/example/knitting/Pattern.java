@@ -5,8 +5,11 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import org.parceler.Parcel;
+
 import java.util.List;
 
+@Parcel(analyze = Pattern.class)
 @ParseClassName("Pattern")
 public class Pattern extends ParseObject {
 
@@ -15,6 +18,8 @@ public class Pattern extends ParseObject {
     public static final String KEY_PATTERN = "pattern";
     public static final String KEY_USER = "user";
     public static final String KEY_UPDATED = "updatedAt";
+
+
 
     public String getName() {
         return getString(KEY_NAME);
@@ -32,7 +37,7 @@ public class Pattern extends ParseObject {
         put(KEY_IMAGE, image);
     }
 
-    public List<Boolean> getPattern() {
+    public List<List<Boolean>> getPattern() {
         return getList(KEY_PATTERN);
     }
 

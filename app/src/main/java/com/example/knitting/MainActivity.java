@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +58,12 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
+        if (item.getItemId() == R.id.logout) {
+            ParseUser.logOut();
+            Intent i = new Intent(this, LoginActivity.class);
+            startActivity(i);
+            finish();
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -65,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
         query.include(Pattern.KEY_USER);
        // query.setLimit(1);
         query.addDescendingOrder(Pattern.KEY_UPDATED);
+        Log.d("user", String.valueOf(ParseUser.getCurrentUser()));
+        query.whereEqualTo(Pattern.KEY_USER, ParseUser.getCurrentUser());
         query.findInBackground(new FindCallback<Pattern>() {
             @Override
             public void done(List<Pattern> receivedPatterns, ParseException e) {

@@ -1,5 +1,8 @@
 package com.example.knitting;
 
+import android.util.Log;
+import android.widget.ListView;
+
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -7,6 +10,8 @@ import com.parse.ParseUser;
 
 import org.parceler.Parcel;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Parcel(analyze = Pattern.class)
@@ -18,8 +23,6 @@ public class Pattern extends ParseObject {
     public static final String KEY_PATTERN = "pattern";
     public static final String KEY_USER = "user";
     public static final String KEY_UPDATED = "updatedAt";
-
-
 
     public String getName() {
         return getString(KEY_NAME);
@@ -37,12 +40,31 @@ public class Pattern extends ParseObject {
         put(KEY_IMAGE, image);
     }
 
-    public List<List<Boolean>> getPattern() {
-        return getList(KEY_PATTERN);
+    public boolean[][] getPattern() {
+        List<List<Boolean>> values = getList(KEY_PATTERN);
+        boolean[][] valuesArray = new boolean[values.size()][];
+        for (int i = 0; i < values.size(); i++) {
+            List<Boolean> row = values.get(i);
+            boolean[] newRow = new boolean[row.size()];
+            for (int j = 0; j < row.size(); j++) {
+                newRow[j] = row.get(j);
+            }
+            valuesArray[i] = newRow;
+        }
+        return valuesArray;
     }
 
-    public void setPattern(List<Boolean> pattern) {
-        put(KEY_PATTERN, pattern);
+    public void setPattern(boolean[][] pattern) {
+        List<List<Boolean>> values = new ArrayList<>();
+        for (int i = 0; i < pattern.length; i++) {
+            List<Boolean> row = new ArrayList<>();
+            boolean[] oldRow = pattern[i];
+            for (int j = 0; j < oldRow.length; j++) {
+                row.add(oldRow[j]);
+            }
+            values.add(row);
+        }
+        put(KEY_PATTERN, values);
     }
 
     public ParseUser getUser() {

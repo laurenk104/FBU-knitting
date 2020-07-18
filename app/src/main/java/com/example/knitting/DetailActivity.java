@@ -1,7 +1,9 @@
 package com.example.knitting;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -19,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.tabs.TabLayout;
 import com.parse.ParseUser;
 
 import org.parceler.Parcels;
@@ -31,59 +34,23 @@ import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
 
-    ImageView ivDetailImage;
-    ListView gridColumns;
-    GridView gridPattern;
-
-    Pattern pattern;
-    boolean[][] values;
-    Drawable drawable;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        pattern = (Pattern) Parcels.unwrap(getIntent().getParcelableExtra(Pattern.class.getSimpleName()));
-        values = pattern.getPattern();
-
-        ivDetailImage = findViewById(R.id.ivDetailImage);
-        gridPattern = findViewById(R.id.gridPattern);
-        PatternGridAdapter adapter = new PatternGridAdapter(this, values);
-        gridPattern.setAdapter(adapter);
-        gridPattern.setNumColumns(values[0].length);
-
-     //   Glide.with(this).load(pattern.getImage().getUrl()).into(ivDetailImage);
-
+        Pattern pattern = (Pattern) Parcels.unwrap(getIntent().getParcelableExtra(Pattern.class.getSimpleName()));
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-//        Thread thread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    drawable = drawableFromUrl(pattern.getImage().getUrl());
-//                    Log.d("test", "" + drawable);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//        thread.start();
-
-        getSupportActionBar().setLogo(drawable);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setTitle(pattern.getName());
-    }
 
-    public static Drawable drawableFromUrl(String url) throws IOException {
-        Bitmap x;
+        // Get the ViewPager and set it's PagerAdapter so that it can display items
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager.setAdapter(new PatternFragmentPagerAdapter(getSupportFragmentManager(),
+                DetailActivity.this, pattern));
 
-        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-        connection.connect();
-        InputStream input = connection.getInputStream();
-
-        x = BitmapFactory.decodeStream(input);
-        return new BitmapDrawable(Resources.getSystem(), x);
+        // Give the TabLayout the ViewPager
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override

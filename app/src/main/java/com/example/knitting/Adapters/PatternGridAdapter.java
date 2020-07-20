@@ -2,12 +2,15 @@ package com.example.knitting.Adapters;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.knitting.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,8 +50,19 @@ public class PatternGridAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        TextView dummyTextView = new TextView(context);
-        dummyTextView.setText(unraveledPattern.get(i).toString());
-        return dummyTextView;
+        if (view == null) {
+            final LayoutInflater layoutInflater = LayoutInflater.from(context);
+            view = layoutInflater.inflate(R.layout.item_stitch, null);
+        }
+
+        ImageView imageView = view.findViewById(R.id.ivStitch);
+
+        if (unraveledPattern.get(i)) {
+            imageView.setImageResource(R.drawable.knit);
+        } else {
+            imageView.setImageResource(R.drawable.purl);
+        }
+
+        return imageView;
     }
 }

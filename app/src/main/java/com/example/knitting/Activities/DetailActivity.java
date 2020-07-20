@@ -1,36 +1,20 @@
-package com.example.knitting;
+package com.example.knitting.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.StrictMode;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.ListView;
 
-import com.bumptech.glide.Glide;
+import com.example.knitting.Adapters.PatternFragmentPagerAdapter;
+import com.example.knitting.Pattern;
+import com.example.knitting.R;
 import com.google.android.material.tabs.TabLayout;
 import com.parse.ParseUser;
 
 import org.parceler.Parcels;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
 

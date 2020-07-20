@@ -1,4 +1,4 @@
-package com.example.knitting;
+package com.example.knitting.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,6 +10,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.knitting.Activities.ComposeActivity;
+import com.example.knitting.Activities.LoginActivity;
+import com.example.knitting.Adapters.PatternsAdapter;
+import com.example.knitting.Pattern;
+import com.example.knitting.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;

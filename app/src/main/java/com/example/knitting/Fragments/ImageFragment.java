@@ -1,4 +1,4 @@
-package com.example.knitting;
+package com.example.knitting.Fragments;
 
 import android.os.Bundle;
 
@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.example.knitting.Pattern;
+import com.example.knitting.R;
 
 public class ImageFragment extends Fragment {
 

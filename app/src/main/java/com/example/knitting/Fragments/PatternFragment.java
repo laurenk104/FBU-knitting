@@ -1,18 +1,18 @@
-package com.example.knitting;
+package com.example.knitting.Fragments;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import org.parceler.Parcels;
+import com.example.knitting.Pattern;
+import com.example.knitting.Adapters.PatternGridAdapter;
+import com.example.knitting.R;
 
 public class PatternFragment extends Fragment {
 

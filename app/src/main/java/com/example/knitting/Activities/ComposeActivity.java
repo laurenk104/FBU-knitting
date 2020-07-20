@@ -1,24 +1,19 @@
-package com.example.knitting;
+package com.example.knitting.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.knitting.Pattern;
+import com.example.knitting.R;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -26,7 +21,6 @@ import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
-import java.io.File;
 import java.util.Arrays;
 
 public class ComposeActivity extends AppCompatActivity {

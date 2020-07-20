@@ -1,10 +1,14 @@
-package com.example.knitting;
+package com.example.knitting.Adapters;
 
 import android.content.Context;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+
+import com.example.knitting.Fragments.ImageFragment;
+import com.example.knitting.Fragments.PatternFragment;
+import com.example.knitting.Pattern;
 
 public class PatternFragmentPagerAdapter extends FragmentPagerAdapter {
     final int PAGE_COUNT = 2;

@@ -1,9 +1,7 @@
-package com.example.knitting;
+package com.example.knitting.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Movie;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.knitting.Activities.DetailActivity;
+import com.example.knitting.Pattern;
+import com.example.knitting.R;
 
 import org.parceler.Parcels;
 

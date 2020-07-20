@@ -65,4 +65,20 @@ public class PatternGridAdapter extends BaseAdapter {
 
         return imageView;
     }
+
+    // Clean all elements of the recycler
+    public void clear() {
+        unraveledPattern.clear();
+        notifyDataSetChanged();
+    }
+
+    // Add a list of items
+    public void addAll(boolean[][] patternValues) {
+        for (int i = 0; i < patternValues.length; i++) {
+            for (int j = 0; j < patternValues[i].length; j++) {
+                unraveledPattern.add(patternValues[i][j]);
+            }
+        }
+        notifyDataSetChanged();
+    }
 }

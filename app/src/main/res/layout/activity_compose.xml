@@ -22,7 +22,7 @@
         android:text="Take Picture" />
 
     <ImageView
-        android:id="@+id/ivCompose"
+        android:id="@+id/ivPreview"
         android:layout_width="match_parent"
         android:layout_height="318dp"
         android:scaleType="centerCrop"

@@ -6,8 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,8 +24,10 @@ import java.util.Arrays;
 public class PatternFragment extends Fragment {
 
     GridView gridPattern;
+    Switch switchEdit;
     Pattern pattern;
     boolean[][] values;
+    boolean edit;
 
     public PatternFragment(Pattern pattern) {
         this.pattern = pattern;
@@ -39,25 +43,37 @@ public class PatternFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        edit = false;
         values = pattern.getPattern();
+
         gridPattern = view.findViewById(R.id.gridPattern);
         final PatternGridAdapter adapter = new PatternGridAdapter(getContext(), values);
         gridPattern.setAdapter(adapter);
         gridPattern.setNumColumns(values[0].length);
 
+        switchEdit = view.findViewById(R.id.switchEdit);
+        switchEdit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                edit = b;
+            }
+        });
+
         gridPattern.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView parent, View view, int position, long id) {
-                int row = position / gridPattern.getNumColumns();
-                int column = position % gridPattern.getNumColumns();
+                if (edit) {
+                    int row = position / gridPattern.getNumColumns();
+                    int column = position % gridPattern.getNumColumns();
 
-                boolean stitch = values[row][column];
-                values[row][column] = !stitch;
-                pattern.setPattern(values);
-                pattern.saveInBackground();
+                    boolean stitch = values[row][column];
+                    values[row][column] = !stitch;
+                    pattern.setPattern(values);
+                    pattern.saveInBackground();
 
-                adapter.clear();
-                adapter.addAll(values);
+                    adapter.clear();
+                    adapter.addAll(values);
+                }
             }
         });
     }

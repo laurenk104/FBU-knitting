@@ -1,12 +1,16 @@
 package com.example.knitting.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.knitting.Adapters.PatternFragmentPagerAdapter;
 import com.example.knitting.Pattern;
@@ -23,7 +27,7 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        Pattern pattern = (Pattern) Parcels.unwrap(getIntent().getParcelableExtra(Pattern.class.getSimpleName()));
+        final Pattern pattern = (Pattern) Parcels.unwrap(getIntent().getParcelableExtra(Pattern.class.getSimpleName()));
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(pattern.getName());
 
@@ -35,6 +39,16 @@ public class DetailActivity extends AppCompatActivity {
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        Button btnName = (Button) findViewById(R.id.btnName);
+        btnName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fm = getSupportFragmentManager();
+                NewNameActivity editNameDialogFragment = new NewNameActivity(getSupportActionBar(), pattern);
+                editNameDialogFragment.show(fm, "fragment_edit_name");
+            }
+        });
     }
 
     @Override

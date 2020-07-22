@@ -7,7 +7,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -29,7 +31,12 @@ import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Arrays;
 
 public class ComposeActivity extends AppCompatActivity {
@@ -39,12 +46,14 @@ public class ComposeActivity extends AppCompatActivity {
 
     EditText tvEditName;
     Button btnTakePic;
+    Button btnSelectPic;
     ImageView ivPreview;
     Button btnStockinette;
     Button btnRibbing;
 
-    public final String APP_TAG = "MyCustomApp";
+    public final String APP_TAG = "ComposeActivity";
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
+    public final static int PICK_PHOTO_CODE = 1046;
     public String photoFileName = "photo.jpg";
     File photoFile;
 
@@ -68,6 +77,7 @@ public class ComposeActivity extends AppCompatActivity {
 
         tvEditName = findViewById(R.id.tvEditName);
         btnTakePic = findViewById(R.id.btnTakePic);
+        btnSelectPic = findViewById(R.id.btnSelectPic);
         ivPreview = findViewById(R.id.ivPreview);
         btnStockinette = findViewById(R.id.btnStockinette);
         btnRibbing = findViewById(R.id.btnRibbing);
@@ -78,22 +88,28 @@ public class ComposeActivity extends AppCompatActivity {
                 onLaunchCamera(view);
             }
         });
+        btnSelectPic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onPickPhoto(view);
+            }
+        });
 
         btnStockinette.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                makeNewPattern(stockinette, "stockinette.jpg", photoFile);
+                makeNewPattern(stockinette, photoFile);
             }
         });
         btnRibbing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                makeNewPattern(oneRibbing, "one-by-one-ribbing.jpg", photoFile);
+                makeNewPattern(oneRibbing, photoFile);
             }
         });
     }
 
-    public void makeNewPattern(boolean[][] patternArray, String name, File photoFile) {
+    public void makeNewPattern(boolean[][] patternArray, File photoFile) {
         final Pattern pattern = new Pattern();
         pattern.setName(tvEditName.getText().toString());
         pattern.setImage(new ParseFile(photoFile));
@@ -165,7 +181,60 @@ public class ComposeActivity extends AppCompatActivity {
             } else { // Result was a failure
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
+        } else if ((data != null) && requestCode == PICK_PHOTO_CODE) {
+            Uri photoUri = data.getData();
+
+            // Load the image located at photoUri into selectedImage
+            Bitmap selectedImage = loadFromUri(photoUri);
+
+            OutputStream os = null;
+            try {
+                os = new BufferedOutputStream(new FileOutputStream(photoFile));
+                selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, os);
+                os.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // Load the selected image into a preview
+            ivPreview.setImageBitmap(selectedImage);
         }
+    }
+
+    public void onPickPhoto(View view) {
+        // Create intent for picking a photo from the gallery
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        photoFile = getPhotoFileUri(photoFileName);
+
+        Uri fileProvider = FileProvider.getUriForFile(ComposeActivity.this, "com.codepath.fileprovider", photoFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
+
+        // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
+        // So as long as the result is not null, it's safe to use the intent.
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            // Bring up gallery to select a photo
+            startActivityForResult(intent, PICK_PHOTO_CODE);
+        }
+    }
+
+    public Bitmap loadFromUri(Uri photoUri) {
+        Bitmap image = null;
+        try {
+            // check version of Android on device
+            if(Build.VERSION.SDK_INT > 27){
+                // on newer versions of Android, use the new decodeBitmap method
+                ImageDecoder.Source source = ImageDecoder.createSource(this.getContentResolver(), photoUri);
+                image = ImageDecoder.decodeBitmap(source);
+            } else {
+                // support older versions of Android by using getBitmap
+                image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return image;
     }
 
     @Override

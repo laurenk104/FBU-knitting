@@ -21,6 +21,12 @@
         android:layout_height="wrap_content"
         android:text="Take Picture" />
 
+    <Button
+        android:id="@+id/btnSelectPic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose from gallery" />
+
     <ImageView
         android:id="@+id/ivPreview"
         android:layout_width="match_parent"

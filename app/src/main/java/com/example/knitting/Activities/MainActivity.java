@@ -57,6 +57,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.home) {
+            // Navigate to the home activity
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            return true;
+        }
         if (item.getItemId() == R.id.compose) {
             // Navigate to the compose activity
             Intent intent = new Intent(this, ComposeActivity.class);

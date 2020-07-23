@@ -252,6 +252,12 @@ public class ComposeActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
+        if (item.getItemId() == R.id.compose) {
+            // Navigate to the compose activity
+            Intent intent = new Intent(this, ComposeActivity.class);
+            startActivity(intent);
+            return true;
+        }
         if (item.getItemId() == R.id.logout) {
             ParseUser.logOut();
             Intent i = new Intent(this, LoginActivity.class);

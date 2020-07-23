@@ -16,6 +16,7 @@ import com.example.knitting.Adapters.PatternFragmentPagerAdapter;
 import com.example.knitting.Pattern;
 import com.example.knitting.R;
 import com.google.android.material.tabs.TabLayout;
+import com.parse.ParseException;
 import com.parse.ParseUser;
 
 import org.parceler.Parcels;
@@ -47,6 +48,16 @@ public class DetailActivity extends AppCompatActivity {
                 FragmentManager fm = getSupportFragmentManager();
                 NewNameActivity editNameDialogFragment = new NewNameActivity(getSupportActionBar(), pattern);
                 editNameDialogFragment.show(fm, "fragment_edit_name");
+            }
+        });
+
+        Button btnDelete = (Button) findViewById(R.id.btnDelete);
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fm = getSupportFragmentManager();
+                DeleteActivity deleteActivity = new DeleteActivity(pattern);
+                deleteActivity.show(fm, "delete");
             }
         });
     }

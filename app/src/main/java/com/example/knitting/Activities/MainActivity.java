@@ -76,9 +76,7 @@ public class MainActivity extends AppCompatActivity {
     private void queryPatterns() {
         ParseQuery<Pattern> query = ParseQuery.getQuery(Pattern.class);
         query.include(Pattern.KEY_USER);
-       // query.setLimit(1);
         query.addDescendingOrder(Pattern.KEY_UPDATED);
-        Log.d("user", String.valueOf(ParseUser.getCurrentUser()));
         query.whereEqualTo(Pattern.KEY_USER, ParseUser.getCurrentUser());
         query.findInBackground(new FindCallback<Pattern>() {
             @Override

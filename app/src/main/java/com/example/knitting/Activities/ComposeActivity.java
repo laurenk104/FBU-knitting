@@ -98,15 +98,28 @@ public class ComposeActivity extends AppCompatActivity {
         btnStockinette.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                makeNewPattern(stockinette, photoFile);
+                verify(stockinette);
             }
         });
         btnRibbing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                makeNewPattern(oneRibbing, photoFile);
+                verify(oneRibbing);
             }
         });
+    }
+
+    public void verify(boolean[][] patternArray) {
+        String name = tvEditName.getText().toString();
+        if (name.isEmpty()) {
+            Toast.makeText(this, "Name cannot be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (photoFile == null || ivPreview.getDrawable() == null) {
+            Toast.makeText(this, "Must include an image", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        makeNewPattern(patternArray, photoFile);
     }
 
     public void makeNewPattern(boolean[][] patternArray, File photoFile) {
@@ -121,7 +134,8 @@ public class ComposeActivity extends AppCompatActivity {
             public void done(ParseException e) {
                 if (e != null) {
                     Log.e("ComposeActivity", "Error while saving", e);
-                    //Toast.makeText(getBaseContext(), "Error while saving", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "Error while saving", Toast.LENGTH_SHORT).show();
+                    return;
                 }
                 tvEditName.setText("");
                 ivPreview.setImageResource(0);

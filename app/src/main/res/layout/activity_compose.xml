@@ -46,4 +46,10 @@
         android:layout_height="wrap_content"
         android:text="1x1 Ribbing" />
 
+    <Button
+        android:id="@+id/btnSelect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select a default pattern" />
+
 </LinearLayout>

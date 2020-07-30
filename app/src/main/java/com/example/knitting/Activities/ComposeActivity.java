@@ -50,6 +50,7 @@ public class ComposeActivity extends AppCompatActivity {
     ImageView ivPreview;
     Button btnStockinette;
     Button btnRibbing;
+    Button btnSelect;
 
     public final String APP_TAG = "ComposeActivity";
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
@@ -81,6 +82,7 @@ public class ComposeActivity extends AppCompatActivity {
         ivPreview = findViewById(R.id.ivPreview);
         btnStockinette = findViewById(R.id.btnStockinette);
         btnRibbing = findViewById(R.id.btnRibbing);
+        btnSelect = findViewById(R.id.btnSelect);
 
         btnTakePic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,6 +107,14 @@ public class ComposeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 verify(oneRibbing);
+            }
+        });
+
+        btnSelect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), SelectActivity.class);
+                startActivity(intent);
             }
         });
     }

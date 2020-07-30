@@ -80,28 +80,33 @@ public class SelectActivity extends AppCompatActivity {
     }
 
     private void queryPatterns() {
-        // This is not a very effective implementation since I couldn't find a way to query patterns
-        // made by another user, so it queries all patterns ever made and only shows the ones made by admin.
-        // This should be improved in the future.
-        ParseQuery<Pattern> query = ParseQuery.getQuery(Pattern.class);
-        query.addAscendingOrder(Pattern.KEY_CREATED_AT);
-        query.findInBackground(new FindCallback<Pattern>() {
-            @Override
-            public void done(List<Pattern> receivedPatterns, ParseException e) {
+        // query user
+        ParseQuery<ParseUser> user = ParseUser.getQuery();
+        user.whereEqualTo("username", "admin");
+        user.findInBackground(new FindCallback<ParseUser>() {
+            public void done(List<ParseUser> objects, ParseException e) {
                 if (e != null) {
-                    Log.e("SelectActivity", "Issue with getting posts", e);
+                    // Something went wrong.
                     return;
                 }
-                for (Pattern pattern : receivedPatterns) {
-                    try {
-                        if (pattern.getUser().fetchIfNeeded().getUsername().equals("admin")) {
-                            patterns.add(pattern);
+                ParseUser admin = objects.get(0);
+
+                // query patterns
+                ParseQuery<Pattern> query = ParseQuery.getQuery(Pattern.class);
+                query.addAscendingOrder(Pattern.KEY_CREATED_AT);
+                query.whereEqualTo(Pattern.KEY_USER, admin);
+                query.findInBackground(new FindCallback<Pattern>() {
+                    @Override
+                    public void done(List<Pattern> receivedPatterns, ParseException e) {
+                        if (e != null) {
+                            Log.e("SelectActivity", "Issue with getting posts", e);
+                            return;
                         }
-                    } catch (ParseException ex) {
-                        ex.printStackTrace();
+                        Log.d("patterns", receivedPatterns.toString());
+                        patterns.addAll(receivedPatterns);
+                        adapter.notifyDataSetChanged();
                     }
-                }
-                adapter.notifyDataSetChanged();
+                });
             }
         });
     }

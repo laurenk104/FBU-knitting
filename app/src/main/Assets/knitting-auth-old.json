@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "knitting-284704",
+  "private_key_id": "51856c6c8275bbe66d9475e25049d759c8345922",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDJjnb+5dQN6kJj\nMslWKJ95Hmc2vhaKRn365J8nLdZDRthr6Ji9XCt4UmJC1Oke1p7WrZcmpLR7BaZ+\nMo5WWGGENmTrpmo14AyPshFxsfwy0BtTwEjphYafj/BJnM6XjDYmcOIsKxR8EIvl\nFKyOaaQ/Y8eTlZBBuewHcb1H62kbqDD4ywHzufoYJujs0T+299JVkU29z+eSfnGw\nDHuMaisRRYubxu3nCsKl2rZ2CQX65nkV0wBdcJRqb+TIaX3csRbC5nK07ttyG9ja\niM3P/dGhBTjjf4KubnMM2aRqL/8PbPdztc9NMi163ODdxZahz4rQw3ZZN6wxlnWK\n4MMfC8+FAgMBAAECggEADXOmiafuFjwPUGglAgApEIZqbgyTglWZ3KMVSiI0t0qL\nPbxvms4dd2TMLditP4OKy01MYrLB+g0fY2aQk4ut5ArugyZ/cF2l715h7EKF0FON\nfb8kcc1mQpzywcvA1mI86CWth2dPcS5FH+jyBHkuRWEtgmVZFA6w0kuRgRmUt/Jl\n2+ojP/8oO2d+TIByvuY8JJI/1Tfw2P/b9KO7wva0RU0MSNGoR5c6zoI3yyh5rWnY\naAnC0F8H8kxGMVCP3pt3NCrCR4N8PMxj5TlkV/f61ojLr6FHAFO2/qexHyDyF2jj\nW0gKcWyrY1G9dCD3kEMpLzmlNYC3IfQ6KEEDeUvc6wKBgQDqHHCKCQTSEvsuGA9t\nP8tG2h63BzKUvEWUyCatE5C8bd6LiMxZtX9OszDjq1t1yBYzJxU7seItcbjT9FDy\nP2CJzrGAhq1K7NL+tiZEOAH4eNZSg5s1S/tEeiW8xgJJEE4L17T6JNiOLYfe8VRe\n3qZJCtP9Dtg2ycuDrG18urE1QwKBgQDcZtDN71S9ZPI5kfAKKi+jeQ9hvxjQ3uzL\nn0+HA6EkkE2g+mfpQDwm8eUr80mHfvJe+mV05iohGpErM8sfxtDE+dnoRHnNU87y\nwjKIq9Xfz5X8X8biPznqdvF3jpzPOyS6eGB2NULHFbvVNZKyZX1rPGb57zfokyLF\n07TBblw3lwKBgAGi1T6BtaDqNQsra+Atk/QYziIlULstXacehvaqrlZCxk1fVV5D\nIHKiWfMdXXRDQ7Rzz3gtVBFRPCNvD6nBu6D66s6lIkzlvsu85iOP6KOd5JGLDeif\ncVAXMnBRSe7MyF7Y0RD2dPT5aHusYBSRpcPY6YZZNjWbz2pKKDG49EgVAoGAIQcz\nUTkFTOB8wA3Tl+JcgzXYDUDS2jId8CGujEAJ/O23BGGiAr1Chl+HhT+PDEQE1CDX\n5V28gHt3t66qSNfFX09FzV29lvxxLcXWRs7hXQnBozFDH5Jz/mPWqaDwdMmbJmp1\noiE3IZhrLnc5xYwZ8GD72YZ0rWCnPFgOZVJBdX8CgYEA5mckZOfQtDuoqcgq2DeQ\nD16Ks5MOX/bAektnB2RzDazHPidMZqQuWMb1Mq7jhB9ldlozgmCHJEhfDr/A1Qei\nVystI9ltDTUjNmSfqpRmRNErl1EK4dYy6NEnl95Smfldq3ksDdb0o0NdqvoRPNSK\nPK4/mih0Vq8si3ScmpOrMiE=\n-----END PRIVATE KEY-----\n",
+  "client_email": "knitting-service-account@knitting-284704.iam.gserviceaccount.com",
+  "client_id": "101951228258178079081",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/knitting-service-account%40knitting-284704.iam.gserviceaccount.com"
+}

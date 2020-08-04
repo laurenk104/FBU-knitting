@@ -2,6 +2,7 @@
   "payload": {
     "image": {
       "imageBytes": "YOUR_BASE64_ENCODED_IMAGE_BYTES"
+
     }
   }
 }

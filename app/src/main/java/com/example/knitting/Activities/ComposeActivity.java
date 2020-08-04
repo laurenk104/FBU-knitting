@@ -1,10 +1,9 @@
 package com.example.knitting.Activities;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,7 +12,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.FileUtils;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
@@ -26,15 +24,12 @@ import android.widget.Toast;
 
 import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.RequestHeaders;
-import com.codepath.asynchttpclient.RequestParams;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.knitting.Pattern;
 import com.example.knitting.R;
-import com.google.api.client.util.Base64;
-import com.google.api.gax.paging.Page;
+import com.example.knitting.Stitch;
 import com.google.auth.Credentials;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import com.google.common.collect.Lists;
@@ -43,30 +38,25 @@ import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 import okhttp3.Headers;
 
@@ -74,37 +64,24 @@ public class ComposeActivity extends AppCompatActivity {
 
     public static final String URL = "https://automl.googleapis.com/v1beta1/projects/1042358022323/locations/us-central1/models/IOD502610954312220672:predict";
 
-    boolean[][] stockinette;
-    boolean[][] oneRibbing;
+    boolean[][] pattern;
 
     EditText tvEditName;
     Button btnTakePic;
     Button btnSelectPic;
     ImageView ivPreview;
-    Button btnStockinette;
-    Button btnRibbing;
+    Button btnGo;
     Button btnSelect;
 
     AsyncHttpClient client;
+
+    List<Stitch> stitches;
 
     public final String APP_TAG = "ComposeActivity";
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
     public final static int PICK_PHOTO_CODE = 1046;
     public String photoFileName = "photo.jpg";
     File photoFile;
-
-    public ComposeActivity() {
-        stockinette = new boolean[14][10];
-        for (int i = 0; i < stockinette.length; i++) {
-            Arrays.fill(stockinette[i], true);
-        }
-        oneRibbing = new boolean[14][10];
-        for (int i = 0; i < oneRibbing.length; i++) {
-            for (int j = 0; j < oneRibbing[i].length; j += 2) {
-                oneRibbing[i][j] = true;
-            }
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,11 +92,12 @@ public class ComposeActivity extends AppCompatActivity {
         btnTakePic = findViewById(R.id.btnTakePic);
         btnSelectPic = findViewById(R.id.btnSelectPic);
         ivPreview = findViewById(R.id.ivPreview);
-        btnStockinette = findViewById(R.id.btnStockinette);
-        btnRibbing = findViewById(R.id.btnRibbing);
+        btnGo = findViewById(R.id.btnGo);
         btnSelect = findViewById(R.id.btnSelect);
 
         client = new AsyncHttpClient();
+
+        stitches = new ArrayList<>();
 
         btnTakePic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,16 +112,12 @@ public class ComposeActivity extends AppCompatActivity {
             }
         });
 
-        btnStockinette.setOnClickListener(new View.OnClickListener() {
+        btnGo.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
-                verify(stockinette);
-            }
-        });
-        btnRibbing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                verify(oneRibbing);
+                pattern = generatePattern();
+                verify(pattern);
             }
         });
 
@@ -209,18 +183,108 @@ public class ComposeActivity extends AppCompatActivity {
         headers.putAll(cred);
 
         client.post(URL, headers, null, json, new JsonHttpResponseHandler() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
-                Log.d("onSuccess", json.toString());
+                try {
+                    JSONArray jsonArray = json.jsonObject.getJSONArray("payload");
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject stitch = jsonArray.getJSONObject(i);
+                        JSONObject coords = stitch.getJSONObject("imageObjectDetection").getJSONObject("boundingBox")
+                                .getJSONArray("normalizedVertices").getJSONObject(0);
+                        String name = stitch.getString("displayName");
+                        double x = (!coords.has("x")) ? 0.0 : coords.getDouble("x");
+                        double y = (!coords.has("y")) ? 0.0 : coords.getDouble("y");
+                        stitches.add(new Stitch(name, x, y));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
                 Log.d("onFailure", response);
+                Toast.makeText(getBaseContext(), "Could not make pattern", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    public void makeRows(List<List<Stitch>> stitches2d, List<Stitch> row, int x) {
+        if (stitches.size() > 1) {
+            int newX = stitches.get(1).getX();
+            row.add(stitches.remove(0));
+            if (x - newX < 80) {
+                makeRows(stitches2d, row, newX);
+            } else {
+                stitches2d.add(row);
+                makeRows(stitches2d, new ArrayList<Stitch>(), newX);
+            }
+        } else {
+            row.add(stitches.get(0));
+            stitches2d.add(row);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public boolean[][] generatePattern() {
+        Collections.sort(stitches);
+//        for (Stitch stitch : stitches) {
+//            Log.d("stitch", stitch.toString());
+//        }
+
+        List<List<Stitch>> stitches2d = new ArrayList<>();
+        makeRows(stitches2d, new ArrayList<Stitch>(), stitches.get(0).getX());
+
+        int[] modeArray = new int[stitches2d.size()];
+        for (int i = 0; i < stitches2d.size(); i++) {
+            List<Stitch> row = stitches2d.get(i);
+            Log.d("row", row.toString());
+            modeArray[i] = row.size();
+        }
+        int mode = findStitchCount(modeArray, modeArray.length);
+
+        boolean[][] pat = new boolean[stitches2d.size()][mode];
+        for (int i = 0; i < stitches2d.size(); i++) {
+            for (int j = 0; j < stitches2d.get(i).size(); j++) {
+                Stitch stitch = stitches2d.get(i).get(j);
+                int column = (stitch.getX() - 1) / 10;
+                pat[i][column] = stitch.isKnit();
+            }
+        }
+        return pat;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private int findStitchCount(int[] a, int n) {
+        // The output array b[] will have sorted array int []b = new int[n];
+
+        // variable to store max of input array which will to have size of count array
+        int max = Arrays.stream(a).max().getAsInt();
+
+        // auxiliary(count) array to store count. Initialize count array as 0. Size of count array will be equal to (max + 1).
+        int t = max + 1;
+        int[] count = new int[t];
+        for (int i = 0; i < t; i++) {
+            count[i] = 0;
+        }
+
+        // Store count of each element of input array
+        for (int i = 0; i < n; i++) {
+            count[a[i]]++;
+        }
+
+        // mode is the index with maximum count
+        int mode = 0;
+        int k = count[0];
+        for (int i = 1; i < t; i++) {
+            if (count[i] > k) {
+                k = count[i];
+                mode = i;
+            }
+        }
+        return mode;
+    }
 
     public void verify(boolean[][] patternArray) {
         String name = tvEditName.getText().toString();

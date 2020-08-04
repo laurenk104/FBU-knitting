@@ -35,16 +35,10 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <Button
-        android:id="@+id/btnStockinette"
+        android:id="@+id/btnGo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Stockinette" />
-
-    <Button
-        android:id="@+id/btnRibbing"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="1x1 Ribbing" />
+        android:text="Make Pattern" />
 
     <Button
         android:id="@+id/btnSelect"

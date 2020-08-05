@@ -27,7 +27,7 @@ public class Stitch implements Comparable<Stitch> {
     @Override
     public int compareTo(Stitch other) {
         int yDifference = this.y - other.y;
-        if (Math.abs(yDifference) < 3) {
+        if (Math.abs(yDifference) < 5) {
             return this.x - other.x;
         }
         return yDifference;

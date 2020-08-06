@@ -189,7 +189,6 @@ public class ComposeActivity extends AppCompatActivity {
         String json = new String(buffer, "UTF-8");
         String replaced = json.replace("YOUR_BASE64_ENCODED_IMAGE_BYTES", bytes);
 
-        Log.d("api", replaced);
         RequestHeaders headers = new RequestHeaders();
         headers.putAll(cred);
 
@@ -208,8 +207,13 @@ public class ComposeActivity extends AppCompatActivity {
                         double y = (!coords.has("y")) ? 0.0 : coords.getDouble("y");
                         stitches.add(new Stitch(name, x, y));
                     }
-                    generatePattern();
-                    verify();
+                    try {
+                        generatePattern();
+                        verify();
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getBaseContext(), "Could not generate pattern. Please try again.", Toast.LENGTH_LONG).show();
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(getBaseContext(), "Could not analyze photo. Please try again with a pattern.", Toast.LENGTH_LONG).show();
@@ -228,7 +232,7 @@ public class ComposeActivity extends AppCompatActivity {
         if (stitches.size() > 1) {
             int newX = stitches.get(1).getX();
             row.add(stitches.remove(0));
-            if (x - newX < 85) {
+            if (x - newX < 80) {
                 makeRows(stitches2d, row, newX);
             } else {
                 stitches2d.add(row);
@@ -260,11 +264,14 @@ public class ComposeActivity extends AppCompatActivity {
 
         boolean[][] pat = new boolean[stitches2d.size()][mode];
         for (int i = 0; i < stitches2d.size(); i++) {
+            Arrays.fill(pat[i], true);
+        //    Log.d("row " + i, Arrays.toString(pat[i]));
             for (int j = 0; j < stitches2d.get(i).size(); j++) {
                 Stitch stitch = stitches2d.get(i).get(j);
                 int column = (stitch.getX() - 1) / 10;
                 pat[i][column] = stitch.isKnit();
             }
+         //   Log.d("row " + i, Arrays.toString(pat[i]));
         }
         patternArray = pat;
     }

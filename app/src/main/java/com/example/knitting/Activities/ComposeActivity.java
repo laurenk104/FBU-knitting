@@ -126,12 +126,14 @@ public class ComposeActivity extends AppCompatActivity {
                 }
             }
         });
+        btnGo.setVisibility(View.GONE);
 
         btnSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), SelectActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.right_in, R.anim.left_out);
             }
         });
     }
@@ -264,7 +266,8 @@ public class ComposeActivity extends AppCompatActivity {
 
         boolean[][] pat = new boolean[stitches2d.size()][mode];
         for (int i = 0; i < stitches2d.size(); i++) {
-            Arrays.fill(pat[i], true);
+        //    Arrays.fill(pat[i], true);
+            Arrays.fill(pat[i], stitches2d.get(0).get(0).isKnit());
         //    Log.d("row " + i, Arrays.toString(pat[i]));
             for (int j = 0; j < stitches2d.get(i).size(); j++) {
                 Stitch stitch = stitches2d.get(i).get(j);
@@ -413,6 +416,7 @@ public class ComposeActivity extends AppCompatActivity {
             // Load the selected image into a preview
             ivPreview.setImageBitmap(selectedImage);
         }
+        btnGo.setVisibility(View.VISIBLE);
     }
 
     public void onPickPhoto(View view) {

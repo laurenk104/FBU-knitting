@@ -9,6 +9,13 @@
     android:orientation="vertical"
     tools:context=".Activities.LoginActivity">
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:layout_weight="1"
+        app:srcCompat="@drawable/knit_heart" />
+
     <EditText
         android:id="@+id/etUsername"
         android:layout_width="match_parent"
@@ -31,6 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:backgroundTint="#A1673AB7"
         android:text="Log in" />
 
     <Button
@@ -38,5 +46,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:backgroundTint="#94009688"
         android:text="Sign up" />
+
 </LinearLayout>

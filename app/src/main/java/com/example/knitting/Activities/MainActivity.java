@@ -35,18 +35,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         patterns = new ArrayList<>();
-
-        rvPatterns = findViewById(R.id.rvPatterns);
-        adapter = new PatternsAdapter(this, patterns);
-        // Recycler view setup: layout manager and the adapter
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        rvPatterns.setLayoutManager(layoutManager);
-        rvPatterns.setAdapter(adapter);
-
         queryPatterns();
+
+        adapter = new PatternsAdapter(this, patterns);
+    }
+
+    private void setLayout() {
+        if (patterns.size() > 0) {
+            setContentView(R.layout.activity_main);
+            rvPatterns = findViewById(R.id.rvPatterns);
+            // Recycler view setup: layout manager and the adapter
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+            rvPatterns.setLayoutManager(layoutManager);
+            rvPatterns.setAdapter(adapter);
+        } else {
+            setContentView(R.layout.item_empty);
+            ImageView symbol = findViewById(R.id.ivSymbol);
+            symbol.setImageResource(R.drawable.grid_off_24px);
+        }
     }
 
     @Override
@@ -94,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 patterns.addAll(receivedPatterns);
                 adapter.notifyDataSetChanged();
+                setLayout();
             }
         });
     }

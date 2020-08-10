@@ -136,7 +136,6 @@ public class SelectActivity extends AppCompatActivity {
             // Navigate to the compose activity
             Intent intent = new Intent(this, ComposeActivity.class);
             startActivity(intent);
-            overridePendingTransition(R.anim.left_in, R.anim.right_out);
             return true;
         }
         if (item.getItemId() == R.id.logout) {

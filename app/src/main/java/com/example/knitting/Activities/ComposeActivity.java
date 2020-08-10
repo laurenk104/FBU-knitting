@@ -20,6 +20,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codepath.asynchttpclient.AsyncHttpClient;
@@ -70,11 +72,12 @@ public class ComposeActivity extends AppCompatActivity {
     boolean[][] patternArray;
 
     EditText tvEditName;
-    Button btnTakePic;
-    Button btnSelectPic;
     ImageView ivPreview;
     Button btnGo;
-    Button btnSelect;
+    ProgressBar pbLoading;
+    TextView tvSelect;
+    ImageView ivTakePic;
+    ImageView ivSelectPic;
 
     AsyncHttpClient client;
 
@@ -92,23 +95,24 @@ public class ComposeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_compose);
 
         tvEditName = findViewById(R.id.tvEditName);
-        btnTakePic = findViewById(R.id.btnTakePic);
-        btnSelectPic = findViewById(R.id.btnSelectPic);
         ivPreview = findViewById(R.id.ivPreview);
         btnGo = findViewById(R.id.btnGo);
-        btnSelect = findViewById(R.id.btnSelect);
+        pbLoading = findViewById(R.id.pbLoading);
+        tvSelect = findViewById(R.id.tvSelect);
+        ivTakePic = findViewById(R.id.ivTakePic);
+        ivSelectPic = findViewById(R.id.ivSelectPic);
 
         client = new AsyncHttpClient();
 
         stitches = new ArrayList<>();
 
-        btnTakePic.setOnClickListener(new View.OnClickListener() {
+        ivTakePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onLaunchCamera(view);
             }
         });
-        btnSelectPic.setOnClickListener(new View.OnClickListener() {
+        ivSelectPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onPickPhoto(view);
@@ -120,15 +124,18 @@ public class ComposeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    authenticate();
+                    pbLoading.setVisibility(View.VISIBLE);
+                    btnGo.setVisibility(View.GONE);
+                    verify();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
-        btnGo.setVisibility(View.GONE);
 
-        btnSelect.setOnClickListener(new View.OnClickListener() {
+        pbLoading.setVisibility(View.GONE);
+
+        tvSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), SelectActivity.class);
@@ -211,12 +218,16 @@ public class ComposeActivity extends AppCompatActivity {
                     }
                     try {
                         generatePattern();
-                        verify();
+                        makeNewPattern(photoFile);
                     } catch (ArrayIndexOutOfBoundsException e) {
+                        pbLoading.setVisibility(View.GONE);
+                        btnGo.setVisibility(View.VISIBLE);
                         e.printStackTrace();
                         Toast.makeText(getBaseContext(), "Could not generate pattern. Please try again.", Toast.LENGTH_LONG).show();
                     }
                 } catch (JSONException e) {
+                    pbLoading.setVisibility(View.GONE);
+                    btnGo.setVisibility(View.VISIBLE);
                     e.printStackTrace();
                     Toast.makeText(getBaseContext(), "Could not analyze photo. Please try again with a pattern.", Toast.LENGTH_LONG).show();
                 }
@@ -237,21 +248,22 @@ public class ComposeActivity extends AppCompatActivity {
             if (x - newX < 80) {
                 makeRows(stitches2d, row, newX);
             } else {
-                stitches2d.add(row);
+                if (row.size() > 2) {
+                    stitches2d.add(row);
+                }
                 makeRows(stitches2d, new ArrayList<Stitch>(), newX);
             }
         } else {
-            row.add(stitches.get(0));
-            stitches2d.add(row);
+            if (row.size() > 2) {
+                row.add(stitches.get(0));
+                stitches2d.add(row);
+            }
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void generatePattern() {
         Collections.sort(stitches);
-        for (Stitch stitch : stitches) {
-            Log.d("stitch", stitch.toString());
-        }
 
         List<List<Stitch>> stitches2d = new ArrayList<>();
         makeRows(stitches2d, new ArrayList<Stitch>(), stitches.get(0).getX());
@@ -259,22 +271,22 @@ public class ComposeActivity extends AppCompatActivity {
         int[] modeArray = new int[stitches2d.size()];
         for (int i = 0; i < stitches2d.size(); i++) {
             List<Stitch> row = stitches2d.get(i);
-        //    Log.d("row", row.toString());
+            Log.d("row", row.toString());
             modeArray[i] = row.size();
         }
-        int mode = findStitchCount(modeArray, modeArray.length);
+     //   int mode = findStitchCount(modeArray, modeArray.length);
+        int mode = 10;
 
         boolean[][] pat = new boolean[stitches2d.size()][mode];
         for (int i = 0; i < stitches2d.size(); i++) {
-        //    Arrays.fill(pat[i], true);
-            Arrays.fill(pat[i], stitches2d.get(0).get(0).isKnit());
-        //    Log.d("row " + i, Arrays.toString(pat[i]));
+            Arrays.fill(pat[i], stitches2d.get(0).get(2).isKnit());
             for (int j = 0; j < stitches2d.get(i).size(); j++) {
                 Stitch stitch = stitches2d.get(i).get(j);
-                int column = (stitch.getX() - 1) / 10;
+           //     int column = (stitch.getX() - 1) / 10;
+             //   int column = stitch.getX() / 10;
+                int column = (int) Math.round(stitch.getX() / 10.0);
                 pat[i][column] = stitch.isKnit();
             }
-         //   Log.d("row " + i, Arrays.toString(pat[i]));
         }
         patternArray = pat;
     }
@@ -310,17 +322,21 @@ public class ComposeActivity extends AppCompatActivity {
         return mode;
     }
 
-    public void verify() {
+    public void verify() throws IOException {
         String name = tvEditName.getText().toString();
         if (name.isEmpty()) {
             Toast.makeText(this, "Name cannot be empty", Toast.LENGTH_SHORT).show();
+            pbLoading.setVisibility(View.GONE);
+            btnGo.setVisibility(View.VISIBLE);
             return;
         }
         if (photoFile == null || ivPreview.getDrawable() == null) {
             Toast.makeText(this, "Must include an image", Toast.LENGTH_SHORT).show();
+            pbLoading.setVisibility(View.GONE);
+            btnGo.setVisibility(View.VISIBLE);
             return;
         }
-        makeNewPattern(photoFile);
+        authenticate();
     }
 
     public void makeNewPattern(File photoFile) {
@@ -340,6 +356,8 @@ public class ComposeActivity extends AppCompatActivity {
                 }
                 tvEditName.setText("");
                 ivPreview.setImageResource(0);
+                pbLoading.setVisibility(View.GONE);
+                btnGo.setVisibility(View.VISIBLE);
                 Intent intent = new Intent(ComposeActivity.this, DetailActivity.class);
                 intent.putExtra(Pattern.class.getSimpleName(), Parcels.wrap(pattern));
                 startActivity(intent);
@@ -416,7 +434,6 @@ public class ComposeActivity extends AppCompatActivity {
             // Load the selected image into a preview
             ivPreview.setImageBitmap(selectedImage);
         }
-        btnGo.setVisibility(View.VISIBLE);
     }
 
     public void onPickPhoto(View view) {

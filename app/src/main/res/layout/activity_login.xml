@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="200dp"
         android:layout_weight="1"
-        app:srcCompat="@drawable/knit_heart" />
+        app:srcCompat="@drawable/heart" />
 
     <EditText
         android:id="@+id/etUsername"
@@ -38,15 +38,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:backgroundTint="#A1673AB7"
+        android:textColor="@color/colorAccent"
+        android:backgroundTint="#FFFFFF"
         android:text="Log in" />
+
+    <!--"#A1673AB7"-->
 
     <Button
         android:id="@+id/btnSignup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:backgroundTint="#94009688"
-        android:text="Sign up" />
+        android:backgroundTint="@color/colorAccent"
+        android:text="Sign up"
+        android:textColor="#FFFFFF" />
 
 </LinearLayout>

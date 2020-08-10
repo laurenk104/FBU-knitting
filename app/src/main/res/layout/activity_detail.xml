@@ -28,16 +28,16 @@
             android:id="@+id/btnName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#AD4CAF50"
             android:layout_weight="0.4"
+            android:backgroundTint="@color/colorAccent"
             android:text="Change Name" />
 
         <Button
             android:id="@+id/btnDelete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#85FF0000"
             android:layout_weight="0.6"
+            android:backgroundTint="#9EFF0000"
             android:text="Delete" />
     </LinearLayout>
 
